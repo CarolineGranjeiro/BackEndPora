@@ -14,8 +14,7 @@ public class Inspecao {
 
     }
 
-    public Inspecao(Long id, Long dormenteId, Long usuarioId, LocalDate dataInspecao, String resultadoGeral) {
-        this.id = id;
+    public Inspecao(Long dormenteId, Long usuarioId, LocalDate dataInspecao, String resultadoGeral) {
         this.dormenteId = dormenteId;
         this.usuarioId = usuarioId;
         this.dataInspecao = dataInspecao;
