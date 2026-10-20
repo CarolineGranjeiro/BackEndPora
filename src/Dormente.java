@@ -1,3 +1,5 @@
+import jdk.jshell.Snippet;
+
 import java.time.LocalDate;
 
 public class Dormente {
@@ -9,7 +11,7 @@ public class Dormente {
     private String tipoMadeira;
     private String classeMadeira;
     private double comprimento;
-    private String status;
+    private StatusDormente status;
     private LocalDate criadoEm;
 
 
@@ -20,7 +22,7 @@ public class Dormente {
     }
 
     public Dormente(String numeroSerie, String qrCode, Long loteId, Long contratoId,
-                    String tipoMadeira, String classeMadeira, double comprimento, String status) {
+                    String tipoMadeira, String classeMadeira, double comprimento, StatusDormente status) {
         this.numeroSerie = numeroSerie;
         this.qrCode = qrCode;
         this.loteId = loteId;
@@ -101,11 +103,11 @@ public class Dormente {
         this.qrCode = qrCode;
     }
 
-    public String getStatus() {
+    public StatusDormente getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusDormente status) {
         this.status = status;
     }
 

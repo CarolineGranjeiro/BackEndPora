@@ -5,7 +5,7 @@ public class Main {
 
         // ===== Teste Dormente =====
         Dormente dormente = new Dormente("DM-001", "QR-001", 1L, 1L,
-                "Eucalipto", "A", 2800.0, "ATIVO");
+                "Eucalipto", "A", 2800.0, StatusDormente.REVISAR);
 
         // Sem banco, ninguém gera o id. No teste, colocamos na mão:
         dormente.setId(10L);
@@ -30,7 +30,7 @@ public class Main {
         System.out.println("Resultado: " + inspecao.getResultadoGeral());
 
         // ===== Teste de setter =====
-        dormente.setStatus("EM MANUTENÇÃO");
+        dormente.setStatus(StatusDormente.REVISAR);
         System.out.println();
         System.out.println("Status atualizado: " + dormente.getStatus());
     }
