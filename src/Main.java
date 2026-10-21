@@ -33,5 +33,8 @@ public class Main {
         dormente.setStatus(StatusDormente.REVISAR);
         System.out.println();
         System.out.println("Status atualizado: " + dormente.getStatus());
+
+        Usuario admin = new Usuario("Caroline", "caroline@email.com", "hashTeste123", PerfilUsuario.ADMIN);
+        System.out.println("Admin: " + admin + "Email: " + admin.getEmail() + "Senha" + admin.getSenhaEmbaralhada() );
     }
 }
