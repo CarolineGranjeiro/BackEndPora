@@ -1,3 +1,5 @@
+package com.inspecao.inspecao_dormentes.model;
+
 import java.time.LocalDate;
 
 public class Inspecao {

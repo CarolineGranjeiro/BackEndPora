@@ -1,4 +1,5 @@
-import jdk.jshell.Snippet;
+package com.inspecao.inspecao_dormentes.model;
+import com.inspecao.inspecao_dormentes.enums.StatusDormente;
 
 import java.time.LocalDate;
 
