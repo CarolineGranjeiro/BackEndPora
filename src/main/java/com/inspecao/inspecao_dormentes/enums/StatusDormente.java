@@ -1,4 +1,4 @@
-
+package com.inspecao.inspecao_dormentes.enums;
 // Status possíveis de um dormente (enum = lista fechada; por convenção, em maiúsculas)
 
 public enum StatusDormente {

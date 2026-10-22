@@ -1,3 +1,6 @@
+package com.inspecao.inspecao_dormentes.model;
+import com.inspecao.inspecao_dormentes.enums.PerfilUsuario;
+
 import java.time.LocalDateTime;
 
 public class Usuario {
