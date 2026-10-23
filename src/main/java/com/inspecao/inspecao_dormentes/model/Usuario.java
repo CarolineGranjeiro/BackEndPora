@@ -1,27 +1,27 @@
 package com.inspecao.inspecao_dormentes.model;
 
 import com.inspecao.inspecao_dormentes.enums.PerfilUsuario;
-import jakarta.persistence.*; // Conecta a classe com o banco
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity // Vira tabela no banco
-@Table(name = "usuarios") // Nome da tabela
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
 
-    @Id // Chave primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incremento (1, 2, 3...)
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @Column(nullable = false, length = 150) // Campo obrigatório
+    @Column(nullable = false, length = 150)
     private String nome;
 
-    @Column(nullable = false, unique = true, length = 150) // Obrigatório e não repete
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
     @Column(name = "senha_embaralhada", nullable = false)
     private String senhaEmbaralhada;
 
-    @Enumerated(EnumType.STRING) // Salva o texto do enum (ex: "ADMIN")
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PerfilUsuario perfil;
 
@@ -31,7 +31,6 @@ public class Usuario {
     @Column(name = "expiracao_token")
     private LocalDateTime expiracaoToken;
 
-    // Construtor vazio (obrigatório para o JPA)
     public Usuario() {
     }
 
@@ -42,13 +41,11 @@ public class Usuario {
         this.perfil = perfil;
     }
 
-    // Getters e Setters
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -99,17 +96,4 @@ public class Usuario {
     public void setExpiracaoToken(LocalDateTime expiracaoToken) {
         this.expiracaoToken = expiracaoToken;
     }
-
-    /*
-     * Versão inicial feita pela Carol.
-     * Comentada para evitar duplicação, pois os campos subiram com as anotações do banco.
-     *
-     * private String nome;
-     * private String email;
-     * private Long id;
-     * private String senhaEmbaralhada;
-     * private PerfilUsuario perfil;
-     * private String tokenDeRecuperacao;
-     * private LocalDateTime expiracaoToken;
-     */
 }
