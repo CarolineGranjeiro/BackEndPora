@@ -18,6 +18,9 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
+    @Column(name = "senha", nullable = false)
+    private String senha;
+
     @Column(name = "senha_embaralhada", nullable = false)
     private String senhaEmbaralhada;
 
@@ -37,6 +40,7 @@ public class Usuario {
     public Usuario(String nome, String email, String senhaEmbaralhada, PerfilUsuario perfil) {
         this.nome = nome;
         this.email = email;
+        this.senha = senhaEmbaralhada;
         this.senhaEmbaralhada = senhaEmbaralhada;
         this.perfil = perfil;
     }
@@ -63,6 +67,14 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getSenhaEmbaralhada() {

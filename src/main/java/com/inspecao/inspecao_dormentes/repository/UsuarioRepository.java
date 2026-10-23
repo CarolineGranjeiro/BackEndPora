@@ -6,12 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository // Avisa o Spring que este componente acede à base de dados
+@Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-    // Procura um utilizador pelo e-mail
     Optional<Usuario> findByEmail(String email);
 
-    // Verifica se já existe alguém registado com este e-mail
     boolean existsByEmail(String email);
 }
