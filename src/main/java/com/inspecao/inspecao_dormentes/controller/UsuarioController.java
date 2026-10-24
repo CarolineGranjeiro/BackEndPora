@@ -6,8 +6,14 @@ import com.inspecao.inspecao_dormentes.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+// ==================== NOVOS IMPORTS ====================
+import com.inspecao.inspecao_dormentes.dto.SolicitarRecuperacaoDTO;
+import com.inspecao.inspecao_dormentes.dto.RedefinirSenhaDTO;
+import jakarta.validation.Valid;
+import java.util.Map;
+// =======================================================
 
 @RestController // Indica que esta classe disponibiliza rotas de API REST
 @RequestMapping("/usuarios") // Prefixo para aceder a estas rotas (ex: localhost:8080/usuarios)
@@ -50,6 +56,33 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+    // ==================== ROTAS DE RECUPERAÇÃO DE SENHA ====================
+
+    // Rota POST: recebe o e-mail, gera o token de 15 min e salva no banco
+    @PostMapping("/esqueci-senha")
+    public ResponseEntity<Map<String, String>> solicitarRecuperacao(
+            @Valid @RequestBody SolicitarRecuperacaoDTO dto
+    ) {
+        String token = usuarioService.solicitarRecuperacao(dto.email());
+
+        // Devolvemos o token no JSON apenas para facilitar os testes locais
+        return ResponseEntity.ok(Map.of(
+                "mensagem", "Instruções enviadas com sucesso.",
+                "token", token
+        ));
+    }
+
+    // Rota POST: valida o token, checa se expirou e grava a nova senha criptografada
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<Map<String, String>> redefinirSenha(
+            @Valid @RequestBody RedefinirSenhaDTO dto
+    ) {
+        usuarioService.redefinirSenha(dto.token(), dto.novaSenha());
+
+        return ResponseEntity.ok(Map.of(
+                "mensagem", "Senha redefinida com sucesso!"
+        ));
     }
 }
 

@@ -30,16 +30,18 @@ public class Usuario {
 
     @Column(name = "expiracao_token")
     private LocalDateTime expiracaoToken;
-
-    public Usuario(String nome, String email, String senhaCriptografada, PerfilUsuario perfil) {
+    // 1. Construtor vazio obrigatório para o Hibernate instanciar o objeto do banco
+    public Usuario() {
     }
 
-    public Usuario(String nome, String email, PerfilUsuario perfil,String Senha) {
+    // 2. Construtor completo com os campos na ordem usada no UsuarioService
+    public Usuario(String nome, String email, String senha, PerfilUsuario perfil) {
         this.nome = nome;
         this.email = email;
-        this.perfil = perfil;
         this.senha = senha;
+        this.perfil = perfil;
     }
+
 
     public Integer getId() {
         return id;

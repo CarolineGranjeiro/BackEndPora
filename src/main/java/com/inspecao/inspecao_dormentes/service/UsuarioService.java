@@ -4,6 +4,8 @@ import com.inspecao.inspecao_dormentes.dto.UsuarioRequestDTO;
 import com.inspecao.inspecao_dormentes.dto.UsuarioResponseDTO;
 import com.inspecao.inspecao_dormentes.model.Usuario;
 import com.inspecao.inspecao_dormentes.repository.UsuarioRepository;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,4 +74,43 @@ public class UsuarioService {
         }
         usuarioRepository.deleteById(id);
     }
-}
+
+    // ==================== MÉTODOS DE RECUPERAÇÃO DE SENHA ====================
+
+    @org.springframework.transaction.annotation.Transactional
+    public String solicitarRecuperacao(String email) {
+        // 1. Busca o usuário pelo e-mail
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("E-mail não encontrado no sistema."));
+
+        // 2. Gera um token único e define expiração para 15 minutos
+        String token = java.util.UUID.randomUUID().toString();
+        usuario.setTokenRecuperacao(token);
+        usuario.setExpiracaoToken(java.time.LocalDateTime.now().plusMinutes(15));
+
+        // 3. Salva no banco e retorna o token
+        usuarioRepository.save(usuario);
+        return token;
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void redefinirSenha(String token, String novaSenha) {
+        // 1. Busca o usuário pelo token de recuperação
+        Usuario usuario = usuarioRepository.findByTokenRecuperacao(token)
+                .orElseThrow(() -> new IllegalArgumentException("Token inválido ou não encontrado."));
+
+        // 2. Verifica se o token já expirou
+        if (usuario.getExpiracaoToken() == null || java.time.LocalDateTime.now().isAfter(usuario.getExpiracaoToken())) {
+            throw new IllegalArgumentException("Token expirado. Solicite uma nova recuperação.");
+        }
+
+        // 3. Criptografa a nova senha com BCrypt
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
+
+        // 4. Limpa o token para não permitir reutilização
+        usuario.setTokenRecuperacao(null);
+        usuario.setExpiracaoToken(null);
+
+        usuarioRepository.save(usuario);
+    }
+    }
