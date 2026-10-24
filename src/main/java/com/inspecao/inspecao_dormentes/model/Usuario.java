@@ -21,9 +21,6 @@ public class Usuario {
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    @Column(name = "senha_embaralhada", nullable = false)
-    private String senhaEmbaralhada;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PerfilUsuario perfil;
@@ -34,15 +31,14 @@ public class Usuario {
     @Column(name = "expiracao_token")
     private LocalDateTime expiracaoToken;
 
-    public Usuario() {
+    public Usuario(String nome, String email, String senhaCriptografada, PerfilUsuario perfil) {
     }
 
-    public Usuario(String nome, String email, String senhaEmbaralhada, PerfilUsuario perfil) {
+    public Usuario(String nome, String email, PerfilUsuario perfil,String Senha) {
         this.nome = nome;
         this.email = email;
-        this.senha = senhaEmbaralhada;
-        this.senhaEmbaralhada = senhaEmbaralhada;
         this.perfil = perfil;
+        this.senha = senha;
     }
 
     public Integer getId() {
@@ -77,13 +73,6 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public String getSenhaEmbaralhada() {
-        return senhaEmbaralhada;
-    }
-
-    public void setSenhaEmbaralhada(String senhaEmbaralhada) {
-        this.senhaEmbaralhada = senhaEmbaralhada;
-    }
 
     public PerfilUsuario getPerfil() {
         return perfil;
@@ -93,11 +82,11 @@ public class Usuario {
         this.perfil = perfil;
     }
 
-    public String getTokenDeRecuperacao() {
+    public String getTokenRecuperacao() {
         return tokenRecuperacao;
     }
 
-    public void setTokenDeRecuperacao(String tokenDeRecuperacao) {
+    public void setTokenRecuperacao(String tokenDeRecuperacao) {
         this.tokenRecuperacao = tokenDeRecuperacao;
     }
 
