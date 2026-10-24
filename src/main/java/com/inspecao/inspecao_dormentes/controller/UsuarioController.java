@@ -31,5 +31,25 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         return ResponseEntity.ok(usuarioService.listarTodos());
+
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> atualizar(
+            @PathVariable Integer id,
+            @RequestBody @jakarta.validation.Valid com.inspecao.inspecao_dormentes.dto.UsuarioAtualizacaoDTO dto
+    ) {
+        return ResponseEntity.ok(usuarioService.atualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        usuarioService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }
+

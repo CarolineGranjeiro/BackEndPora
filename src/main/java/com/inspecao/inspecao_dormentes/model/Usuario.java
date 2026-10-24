@@ -28,8 +28,8 @@ public class Usuario {
     @Column(nullable = false)
     private PerfilUsuario perfil;
 
-    @Column(name = "token_de_recuperacao")
-    private String tokenDeRecuperacao;
+    @Column(name = "token_recuperacao")
+    private String tokenRecuperacao;
 
     @Column(name = "expiracao_token")
     private LocalDateTime expiracaoToken;
@@ -94,11 +94,11 @@ public class Usuario {
     }
 
     public String getTokenDeRecuperacao() {
-        return tokenDeRecuperacao;
+        return tokenRecuperacao;
     }
 
     public void setTokenDeRecuperacao(String tokenDeRecuperacao) {
-        this.tokenDeRecuperacao = tokenDeRecuperacao;
+        this.tokenRecuperacao = tokenDeRecuperacao;
     }
 
     public LocalDateTime getExpiracaoToken() {

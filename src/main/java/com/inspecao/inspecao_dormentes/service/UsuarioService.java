@@ -37,5 +37,32 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream()
                 .map(UsuarioResponseDTO::new)
                 .toList();
+
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public UsuarioResponseDTO buscarPorId(Integer id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado para o ID: " + id));
+        return new UsuarioResponseDTO(usuario);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public UsuarioResponseDTO atualizar(Integer id, com.inspecao.inspecao_dormentes.dto.UsuarioAtualizacaoDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado para o ID: " + id));
+
+        usuario.setNome(dto.nome());
+        usuario.setPerfil(dto.perfil());
+
+        return new UsuarioResponseDTO(usuarioRepository.save(usuario));
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void eliminar(Integer id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new IllegalArgumentException("Usuário não encontrado para o ID: " + id);
+        }
+        usuarioRepository.deleteById(id);
     }
 }
