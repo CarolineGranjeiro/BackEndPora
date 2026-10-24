@@ -12,9 +12,14 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder
+    ) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
@@ -22,10 +27,12 @@ public class UsuarioService {
             throw new IllegalArgumentException("E-mail já cadastrado.");
         }
 
+        String senhaCriptografada = passwordEncoder.encode(dto.senha());
+
         Usuario novoUsuario = new Usuario(
                 dto.nome(),
                 dto.email(),
-                dto.senha(),
+                senhaCriptografada,
                 dto.perfil()
         );
 
