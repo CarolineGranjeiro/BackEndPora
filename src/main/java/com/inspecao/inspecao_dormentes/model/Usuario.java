@@ -1,56 +1,54 @@
 package com.inspecao.inspecao_dormentes.model;
-import com.inspecao.inspecao_dormentes.enums.PerfilUsuario;
 
+import com.inspecao.inspecao_dormentes.enums.PerfilUsuario;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = false, length = 150)
     private String nome;
+
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
-    private Long id;
-    private String senhaEmbaralhada;
+
+    @Column(name = "senha", nullable = false)
+    private String senha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PerfilUsuario perfil;
-    private String tokenDeRecuperacao;
+
+    @Column(name = "token_recuperacao")
+    private String tokenRecuperacao;
+
+    @Column(name = "expiracao_token")
     private LocalDateTime expiracaoToken;
-
-    //construtor
-
-    public Usuario(){
-
+    // 1. Construtor vazio obrigatório para o Hibernate instanciar o objeto do banco
+    public Usuario() {
     }
 
-    public Usuario(String nome,  String email, String senhaEmbaralhada, PerfilUsuario perfil) {
+    // 2. Construtor completo com os campos na ordem usada no UsuarioService
+    public Usuario(String nome, String email, String senha, PerfilUsuario perfil) {
         this.nome = nome;
         this.email = email;
-        this.senhaEmbaralhada = senhaEmbaralhada;
+        this.senha = senha;
         this.perfil = perfil;
-
     }
 
-//getters and setters
 
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDateTime getExpiracaoToken() {
-        return expiracaoToken;
-    }
-
-    public void setExpiracaoToken(LocalDateTime expiracaoToken) {
-        this.expiracaoToken = expiracaoToken;
     }
 
     public String getNome() {
@@ -61,6 +59,23 @@ public class Usuario {
         this.nome = nome;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+
     public PerfilUsuario getPerfil() {
         return perfil;
     }
@@ -69,19 +84,19 @@ public class Usuario {
         this.perfil = perfil;
     }
 
-    public String getSenhaEmbaralhada() {
-        return senhaEmbaralhada;
+    public String getTokenRecuperacao() {
+        return tokenRecuperacao;
     }
 
-    public void setSenhaEmbaralhada(String senhaEmbaralhada) {
-        this.senhaEmbaralhada = senhaEmbaralhada;
+    public void setTokenRecuperacao(String tokenDeRecuperacao) {
+        this.tokenRecuperacao = tokenDeRecuperacao;
     }
 
-    public String getTokenDeRecuperacao() {
-        return tokenDeRecuperacao;
+    public LocalDateTime getExpiracaoToken() {
+        return expiracaoToken;
     }
 
-    public void setTokenDeRecuperacao(String tokenDeRecuperacao) {
-        this.tokenDeRecuperacao = tokenDeRecuperacao;
+    public void setExpiracaoToken(LocalDateTime expiracaoToken) {
+        this.expiracaoToken = expiracaoToken;
     }
 }
