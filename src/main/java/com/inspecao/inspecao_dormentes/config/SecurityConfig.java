@@ -7,23 +7,30 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final SecurityFilter securityFilter;
+
+    public SecurityConfig(SecurityFilter securityFilter) {
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // Desativa CSRF para permitir requisições POST via Postman/Insomnia
+        return http
                 .csrf(csrf -> csrf.disable())
-                // Libera todas as rotas da aplicação para testes
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
-                        .anyRequest().permitAll() // mantém as demais rotas liberadas para testes por enquanto
-                );
-
-        return http.build();
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

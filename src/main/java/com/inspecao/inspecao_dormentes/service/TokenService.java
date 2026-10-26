@@ -35,4 +35,18 @@ public class TokenService {
     private Instant gerarDataExpiracao() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
+    // ==================== MÉTODO DE VALIDAÇÃO DO TOKEN ====================
+
+    public String validarToken(String tokenJWT) {
+        try {
+            com.auth0.jwt.algorithms.Algorithm algorithm = com.auth0.jwt.algorithms.Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("inspecao-dormentes")
+                    .build()
+                    .verify(tokenJWT)
+                    .getSubject();
+        } catch (com.auth0.jwt.exceptions.JWTVerificationException exception) {
+            return null; // Retorna nulo se o token for inválido, adulterado ou expirado
+        }
+    }
 }
