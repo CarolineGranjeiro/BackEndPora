@@ -2,6 +2,9 @@ package com.inspecao.inspecao_dormentes.service;
 
 import com.inspecao.inspecao_dormentes.dto.UsuarioRequestDTO;
 import com.inspecao.inspecao_dormentes.dto.UsuarioResponseDTO;
+import com.inspecao.inspecao_dormentes.dto.LoginRequestDTO;
+import com.inspecao.inspecao_dormentes.dto.LoginResponseDTO;
+
 import com.inspecao.inspecao_dormentes.model.Usuario;
 import com.inspecao.inspecao_dormentes.repository.UsuarioRepository;
 import jakarta.validation.constraints.Email;
@@ -9,19 +12,21 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+    private final TokenService tokenService; // <-- 1. atributo adicionado
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
-            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder
+            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
+            TokenService tokenService // <-- 2. parâmetro recebido
     ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService; // <-- 3. atribuição feita
     }
 
     public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
@@ -113,4 +118,27 @@ public class UsuarioService {
 
         usuarioRepository.save(usuario);
     }
+
+    // ==================== MÉTODO DE AUTENTICAÇÃO / LOGIN ====================
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public LoginResponseDTO autenticar(LoginRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new IllegalArgumentException("E-mail ou senha inválidos."));
+
+        if (!passwordEncoder.matches(dto.senha(), usuario.getSenha())) {
+            throw new IllegalArgumentException("E-mail ou senha inválidos.");
+        }
+
+        String token = tokenService.gerarToken(usuario);
+
+        return new LoginResponseDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getPerfil(),
+                token
+        );
     }
+
+}
