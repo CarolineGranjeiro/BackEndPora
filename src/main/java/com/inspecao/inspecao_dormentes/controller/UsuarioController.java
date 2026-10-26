@@ -14,6 +14,8 @@ import com.inspecao.inspecao_dormentes.dto.RedefinirSenhaDTO;
 import jakarta.validation.Valid;
 import java.util.Map;
 // =======================================================
+import com.inspecao.inspecao_dormentes.dto.LoginRequestDTO;
+import com.inspecao.inspecao_dormentes.dto.LoginResponseDTO;
 
 @RestController // Indica que esta classe disponibiliza rotas de API REST
 @RequestMapping("/usuarios") // Prefixo para aceder a estas rotas (ex: localhost:8080/usuarios)
@@ -83,6 +85,14 @@ public class UsuarioController {
         return ResponseEntity.ok(Map.of(
                 "mensagem", "Senha redefinida com sucesso!"
         ));
+
+    }
+    // ==================== ENDPOINT DE LOGIN ====================
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@jakarta.validation.Valid @RequestBody LoginRequestDTO dto) {
+        LoginResponseDTO resposta = usuarioService.autenticar(dto);
+        return ResponseEntity.ok(resposta);
     }
 }
 

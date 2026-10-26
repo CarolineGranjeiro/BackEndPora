@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -18,9 +19,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 // Libera todas as rotas da aplicação para testes
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
+                        .anyRequest().permitAll() // mantém as demais rotas liberadas para testes por enquanto
                 );
-
 
         return http.build();
     }
