@@ -1,118 +1,122 @@
 package com.inspecao.inspecao_dormentes.model;
-import com.inspecao.inspecao_dormentes.enums.StatusDormente;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "dormentes")
 public class Dormente {
-    private Long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "numero_serie", nullable = false, unique = true, length = 50)
     private String numeroSerie;
+
+    @Column(name = "qr_code", unique = true, length = 100)
     private String qrCode;
-    private Long loteId;
-    private Long contratoId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lote_id", nullable = false)
+    private Lote lote;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contrato_id", nullable = false)
+    private Contrato contrato;
+
+    @Column(name = "tipo_madeira", length = 50)
     private String tipoMadeira;
+
+    @Column(name = "classe_madeira", length = 50)
     private String classeMadeira;
-    private double comprimento;
-    private StatusDormente status;
-    private LocalDate criadoEm;
 
+    @Column(name = "comprimento")
+    private Double comprimento;
 
-    //construtores
+    @Column(name = "status", length = 30)
+    private String status;
 
-    public Dormente(){
+    @Column(name = "criado_em", updatable = false)
+    private LocalDateTime criadoEm;
 
+    @PrePersist
+    public void prePersist() {
+        this.criadoEm = LocalDateTime.now();
     }
 
-    public Dormente(String numeroSerie, String qrCode, Long loteId, Long contratoId,
-                    String tipoMadeira, String classeMadeira, double comprimento, StatusDormente status) {
+    public Dormente() {
+    }
+
+    public Dormente(String numeroSerie, String qrCode, Lote lote, Contrato contrato,
+                    String tipoMadeira, String classeMadeira, Double comprimento, String status) {
         this.numeroSerie = numeroSerie;
         this.qrCode = qrCode;
-        this.loteId = loteId;
-        this.contratoId = contratoId;
+        this.lote = lote;
+        this.contrato = contrato;
         this.tipoMadeira = tipoMadeira;
         this.classeMadeira = classeMadeira;
         this.comprimento = comprimento;
         this.status = status;
-        this.criadoEm = LocalDate.now();
     }
 
-    // getters e setter
-    public String getClasseMadeira() {
-        return classeMadeira;
-    }
-
-    public void setClasseMadeira(String classeMadeira) {
-        this.classeMadeira = classeMadeira;
-    }
-
-    public String getTipoMadeira() {
-        return tipoMadeira;
-    }
-
-    public double getComprimento() {
-        return comprimento;
-    }
-
-    public void setComprimento(double comprimento) {
-        this.comprimento = comprimento;
-    }
-
-    public Long getContratoId() {
-        return contratoId;
-    }
-
-    public void setContratoId(Long contratoId) {
-        this.contratoId = contratoId;
-    }
-
-    public LocalDate getCriadoEm() {
-        return criadoEm;
-    }
-
-    public void setCriadoEm(LocalDate criadoEm) {
-        this.criadoEm = criadoEm;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-
-    public Long getLoteId() {
-        return loteId;
-    }
-
-    public void setLoteId(Long loteId) {
-        this.loteId = loteId;
-    }
-
     public String getNumeroSerie() {
         return numeroSerie;
     }
-
     public void setNumeroSerie(String numeroSerie) {
         this.numeroSerie = numeroSerie;
     }
-
     public String getQrCode() {
         return qrCode;
     }
-
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
     }
-
-    public StatusDormente getStatus() {
-        return status;
+    public Lote getLote() {
+        return lote;
     }
-
-    public void setStatus(StatusDormente status) {
-        this.status = status;
+    public void setLote(Lote lote) {
+        this.lote = lote;
     }
-
+    public Contrato getContrato() {
+        return contrato;
+    }
+    public void setContrato(Contrato contrato) {
+        this.contrato = contrato;
+    }
+    public String getTipoMadeira() {
+        return tipoMadeira;
+    }
     public void setTipoMadeira(String tipoMadeira) {
         this.tipoMadeira = tipoMadeira;
+    }
+    public String getClasseMadeira() {
+        return classeMadeira;
+    }
+    public void setClasseMadeira(String classeMadeira) {
+        this.classeMadeira = classeMadeira;
+    }
+    public Double getComprimento() {
+        return comprimento;
+    }
+    public void setComprimento(Double comprimento) {
+        this.comprimento = comprimento; }
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
     }
 }
