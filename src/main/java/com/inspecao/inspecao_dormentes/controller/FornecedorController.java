@@ -35,3 +35,4 @@ public class FornecedorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novo);
     }
 }
+
