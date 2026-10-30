@@ -10,13 +10,13 @@ CREATE TABLE IF NOT EXISTS usuarios (
     token_recuperacao VARCHAR(255) DEFAULT NULL,
     expiracao_token DATETIME DEFAULT NULL
     );
-
 CREATE TABLE IF NOT EXISTS catalogo_defeitos (
-                                                 id INT AUTO_INCREMENT PRIMARY KEY,
-                                                 nome VARCHAR(100) NOT NULL,
-    descricao TEXT
-    );
-
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    codigo_defeito VARCHAR(20),
+    severidade VARCHAR(20)
+);
 CREATE TABLE IF NOT EXISTS fornecedores (
                                             id INT AUTO_INCREMENT PRIMARY KEY,
                                             nome VARCHAR(100) NOT NULL,
