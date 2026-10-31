@@ -3,7 +3,7 @@
 *.env
 
 # Compilação do Java e Maven (pasta onde o Spring gera os arquivos rodáveis)
-target/
+/target/
 *.class
 *.jar
 

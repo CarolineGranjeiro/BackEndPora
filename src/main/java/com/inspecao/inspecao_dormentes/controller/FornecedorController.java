@@ -1,10 +1,10 @@
 package com.inspecao.inspecao_dormentes.controller;
 
 
-import com.inspecao.inspecao_dormentes.dto.FornecedorDTO;
+import com.inspecao.inspecao_dormentes.dto.FornecedorRequestDTO;
 import com.inspecao.inspecao_dormentes.model.Fornecedor;
 import com.inspecao.inspecao_dormentes.service.FornecedorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,26 +13,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fornecedores")
-@CrossOrigin(origins = "*")
 public class FornecedorController {
 
-    @Autowired
-    private FornecedorService service;
+    private final FornecedorService fornecedorService;
 
-    @GetMapping
-    public ResponseEntity<List<Fornecedor>> listar() {
-        return ResponseEntity.ok(service.listarTodos());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Fornecedor> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    public FornecedorController(FornecedorService fornecedorService) {
+        this.fornecedorService = fornecedorService;
     }
 
     @PostMapping
-    public ResponseEntity<Fornecedor> cadastrar(@RequestBody FornecedorDTO dto) {
-        Fornecedor novo = service.salvar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novo);
+    public ResponseEntity<Fornecedor> criar(@RequestBody @Valid FornecedorRequestDTO dto) {
+        Fornecedor novoFornecedor = fornecedorService.criar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoFornecedor);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Fornecedor>> listar() {
+        return ResponseEntity.ok(fornecedorService.listarTodos());
     }
 }
-
