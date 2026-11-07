@@ -10,7 +10,7 @@ public class Inspecao {
 
     @Id                                                   // chave primária
     @GeneratedValue(strategy = GenerationType.IDENTITY)   // o MySQL gera o id (AUTO_INCREMENT)
-    private Long id;
+    private int id;
 
     // Antes: Long dormenteId -> agora guardamos o OBJETO Dormente
     @ManyToOne                                // várias inspeções -> um dormente
@@ -46,11 +46,11 @@ public class Inspecao {
 
     // Getters e setters
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
