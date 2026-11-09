@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/defeitos")
+@CrossOrigin(origins = "*")
 public class CatalogoDefeitoController {
 
     private final CatalogoDefeitoService service;
@@ -24,6 +25,12 @@ public class CatalogoDefeitoController {
     public ResponseEntity<List<DefeitoResponseDTO>> listarTodos() {
         List<DefeitoResponseDTO> defeitos = service.listarTodos();
         return ResponseEntity.ok(defeitos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DefeitoResponseDTO> buscarPorId(@PathVariable Integer id) {
+        DefeitoResponseDTO defeito = service.buscarPorId(id);
+        return ResponseEntity.ok(defeito);
     }
 
     @PostMapping
