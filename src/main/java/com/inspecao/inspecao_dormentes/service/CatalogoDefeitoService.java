@@ -26,8 +26,19 @@ public class CatalogoDefeitoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public DefeitoResponseDTO buscarPorId(Integer id) {
+        CatalogoDefeito defeito = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Defeito não encontrado para o ID: " + id));
+        return new DefeitoResponseDTO(defeito);
+    }
+
     @Transactional
     public DefeitoResponseDTO cadastrar(DefeitoRequestDTO dto) {
+        if (repository.existsByCodigoDefeito(dto.codigoDefeito())) {
+            throw new IllegalArgumentException("Já existe um defeito cadastrado com o código: " + dto.codigoDefeito());
+        }
+
         CatalogoDefeito defeito = new CatalogoDefeito(
                 dto.nome(),
                 dto.descricao(),
