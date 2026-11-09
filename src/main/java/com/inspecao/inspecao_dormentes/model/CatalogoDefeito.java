@@ -16,10 +16,10 @@ public class CatalogoDefeito {
     @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 
-    @Column(name = "codigo_defeito", length = 20)
+    @Column(name = "codigo_defeito", nullable = false, unique = true, length = 20)
     private String codigoDefeito;
 
-    @Column(name = "severidade", length = 20)
+    @Column(name = "severidade", nullable = false, length = 20)
     private String severidade;
 
     public CatalogoDefeito() {}

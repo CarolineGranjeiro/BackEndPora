@@ -2,42 +2,38 @@ package com.inspecao.inspecao_dormentes.model;
 
 import jakarta.persistence.*;
 
-@Entity                                // esta classe representa uma tabela
-@Table(name = "detalhes_inspecao")     // nome da tabela no banco
+@Entity
+@Table(
+        name = "detalhes_inspecao",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_inspecao_defeito",
+                columnNames = {"inspecao_id", "defeito_id"}
+        )
+)
 public class DetalheInspecao {
 
-    @Id                                                   // chave primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY)   // o MySQL gera o id (AUTO_INCREMENT)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Vários detalhes -> uma inspeção (coluna inspecao_id)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inspecao_id", nullable = false)
     private Inspecao inspecao;
 
-    // Vários detalhes -> um defeito do catálogo (coluna defeito_id)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "defeito_id", nullable = false)
     private CatalogoDefeito defeito;
 
-    @Column(name = "observacao")
+    @Column(name = "observacao", length = 255)
     private String observacao;
 
-
-    // Construtores
-
-    public DetalheInspecao() {
-        // o JPA exige um construtor vazio
-    }
+    public DetalheInspecao() {}
 
     public DetalheInspecao(Inspecao inspecao, CatalogoDefeito defeito, String observacao) {
         this.inspecao = inspecao;
         this.defeito = defeito;
         this.observacao = observacao;
     }
-
-
-    // Getters e setters
 
     public Integer getId() {
         return id;
