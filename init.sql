@@ -194,6 +194,7 @@ CREATE TABLE IF NOT EXISTS detalhes_inspecao (
     id INT AUTO_INCREMENT PRIMARY KEY,
     inspecao_id INT NOT NULL,
     defeito_id INT NOT NULL,
+    observacao VARCHAR(255),
 
     CONSTRAINT fk_detalhe_inspecao
         FOREIGN KEY (inspecao_id)
