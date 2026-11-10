@@ -1,56 +1,74 @@
 package com.inspecao.inspecao_dormentes.model;
 
-
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Entity                          // diz ao JPA: esta classe representa uma tabela
-@Table(name = "inspecoes")       // nome da tabela no banco (diferente do nome da classe)
+@Entity
+@Table(name = "inspecoes")
 public class Inspecao {
 
-    @Id                                                   // chave primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY)   // o MySQL gera o id (AUTO_INCREMENT)
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    // Antes: Long dormenteId -> agora guardamos o OBJETO Dormente
-    @ManyToOne                                // várias inspeções -> um dormente
-    @JoinColumn(name = "dormente_id", nullable = false)  // coluna da FK no banco
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dormente_id", nullable = false)
     private Dormente dormente;
 
-    // Antes: Long usuarioId -> agora guardamos o OBJETO Usuario
-    @ManyToOne                                // várias inspeções -> um usuário
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "data_inspecao")
-    private LocalDate dataInspecao;
+    @Column(name = "data_inspecao", nullable = false)
+    private LocalDateTime dataInspecao;
 
-    // Continua String até confirmarmos se a coluna usa o enum StatusDormente
-    @Column(name = "resultado_geral")
-    private String resultadoGeral;
+    @Column(name = "quantidade_observada", nullable = false)
+    private Integer quantidadeObservada;
 
+    @Column(name = "status", nullable = false, length = 50)
+    private String status;
 
-    // Construtores
+    @Column(name = "observacoes", columnDefinition = "TEXT")
+    private String observacoes;
+
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    private LocalDateTime criadoEm;
 
     public Inspecao() {
-        // o JPA exige um construtor vazio
     }
 
-    public Inspecao(Dormente dormente, Usuario usuario, LocalDate dataInspecao, String resultadoGeral) {
+    public Inspecao(
+            Dormente dormente,
+            Usuario usuario,
+            LocalDateTime dataInspecao,
+            Integer quantidadeObservada,
+            String status,
+            String observacoes) {
+
         this.dormente = dormente;
         this.usuario = usuario;
         this.dataInspecao = dataInspecao;
-        this.resultadoGeral = resultadoGeral;
+        this.quantidadeObservada = quantidadeObservada;
+        this.status = status;
+        this.observacoes = observacoes;
     }
 
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime agora = LocalDateTime.now();
 
-    // Getters e setters
+        if (this.dataInspecao == null) {
+            this.dataInspecao = agora;
+        }
 
-    public int getId() {
+        this.criadoEm = agora;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -70,19 +88,43 @@ public class Inspecao {
         this.usuario = usuario;
     }
 
-    public LocalDate getDataInspecao() {
+    public LocalDateTime getDataInspecao() {
         return dataInspecao;
     }
 
-    public void setDataInspecao(LocalDate dataInspecao) {
+    public void setDataInspecao(LocalDateTime dataInspecao) {
         this.dataInspecao = dataInspecao;
     }
 
-    public String getResultadoGeral() {
-        return resultadoGeral;
+    public Integer getQuantidadeObservada() {
+        return quantidadeObservada;
     }
 
-    public void setResultadoGeral(String resultadoGeral) {
-        this.resultadoGeral = resultadoGeral;
+    public void setQuantidadeObservada(Integer quantidadeObservada) {
+        this.quantidadeObservada = quantidadeObservada;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
     }
 }
