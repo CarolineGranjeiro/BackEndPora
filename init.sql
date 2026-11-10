@@ -73,3 +73,51 @@ CREATE TABLE IF NOT EXISTS detalhes_inspecao (
                                                  FOREIGN KEY (inspecao_id) REFERENCES inspeccoes(id),
     FOREIGN KEY (defeito_id) REFERENCES catalogo_defeitos(id)
     );
+
+-- NOVAS TABELAS DE RELATÓRIOS
+CREATE TABLE IF NOT EXISTS relatorios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+
+    -- ACOMPANHAMENTO ou INVENTARIO.
+    tipo VARCHAR(30) NOT NULL,
+
+    -- PDF, XLSX ou CSV.
+    formato VARCHAR(10) NOT NULL,
+
+    -- PROCESSANDO, CONCLUIDO ou FALHOU.
+    status VARCHAR(20) NOT NULL DEFAULT 'PROCESSANDO',
+
+    -- Filtros escolhidos na tela.
+    data_inicio DATE,
+    data_fim DATE,
+    material VARCHAR(50),
+    localizacao VARCHAR(150),
+
+    -- Lista dos gráficos selecionados para o PDF.
+    graficos_selecionados JSON,
+
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    concluido_em DATETIME,
+
+    CONSTRAINT fk_relatorio_usuario
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+
+    INDEX idx_relatorio_criado_em (criado_em),
+    INDEX idx_relatorio_status (status)
+);
+
+CREATE TABLE IF NOT EXISTS relatorio_inspecoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    relatorio_id INT NOT NULL,
+    inspecao_id INT NOT NULL,
+
+    CONSTRAINT fk_relatorio_inspecao_relatorio
+        FOREIGN KEY (relatorio_id) REFERENCES relatorios(id),
+
+    CONSTRAINT fk_relatorio_inspecao_inspecao
+        FOREIGN KEY (inspecao_id) REFERENCES inspeccoes(id),
+
+    CONSTRAINT uk_relatorio_inspecao
+        UNIQUE (relatorio_id, inspecao_id)
+);
