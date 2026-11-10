@@ -37,8 +37,13 @@ public class Inspecao {
     public Inspecao() {
     }
 
-    public Inspecao(Dormente dormente, Usuario usuario, LocalDateTime dataInspecao,
-                    Integer quantidadeObservada, String status, String observacoes) {
+    public Inspecao(
+            Dormente dormente,
+            Usuario usuario,
+            LocalDateTime dataInspecao,
+            Integer quantidadeObservada,
+            String status,
+            String observacoes) {
         this.dormente = dormente;
         this.usuario = usuario;
         this.dataInspecao = dataInspecao;
@@ -48,12 +53,13 @@ public class Inspecao {
     }
 
     @PrePersist
-    protected void onCreate() {
+    public void prePersist() {
+        LocalDateTime agora = LocalDateTime.now();
         if (this.dataInspecao == null) {
-            this.dataInspecao = LocalDateTime.now();
+            this.dataInspecao = agora;
         }
         if (this.criadoEm == null) {
-            this.criadoEm = LocalDateTime.now();
+            this.criadoEm = agora;
         }
     }
 
@@ -121,5 +127,14 @@ public class Inspecao {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+
+    // Métodos de compatibilidade com versões antigas
+    public String getResultadoGeral() {
+        return status;
+    }
+
+    public void setResultadoGeral(String resultadoGeral) {
+        this.status = resultadoGeral;
     }
 }

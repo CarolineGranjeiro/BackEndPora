@@ -67,3 +67,4 @@ public class DetalheInspecao {
         this.observacao = observacao;
     }
 }
+
