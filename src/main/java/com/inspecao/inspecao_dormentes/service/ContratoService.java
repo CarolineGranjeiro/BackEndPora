@@ -1,13 +1,17 @@
+
 package com.inspecao.inspecao_dormentes.service;
 
 import com.inspecao.inspecao_dormentes.dto.ContratoRequestDTO;
+import com.inspecao.inspecao_dormentes.dto.ContratoResponseDTO;
 import com.inspecao.inspecao_dormentes.model.Contrato;
 import com.inspecao.inspecao_dormentes.model.Fornecedor;
 import com.inspecao.inspecao_dormentes.repository.ContratoRepository;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
 
 @Service
 public class ContratoService {
@@ -15,19 +19,56 @@ public class ContratoService {
     private final ContratoRepository contratoRepository;
     private final FornecedorService fornecedorService;
 
-    public ContratoService(ContratoRepository contratoRepository, FornecedorService fornecedorService) {
+    public ContratoService(
+            ContratoRepository contratoRepository,
+            FornecedorService fornecedorService) {
+
         this.contratoRepository = contratoRepository;
         this.fornecedorService = fornecedorService;
     }
 
-    public Contrato criar(ContratoRequestDTO dto) {
-        Fornecedor fornecedor = fornecedorService.buscarPorId(dto.getFornecedorId());
+    @Transactional
+    public ContratoResponseDTO criar(ContratoRequestDTO dto) {
 
-        Contrato contrato = new Contrato(dto.getNumeroContrato(), fornecedor, dto.getDataInicio(), dto.getDataFim());
-        return contratoRepository.save(contrato);
+        String numeroContrato = dto.numeroContrato().trim();
+
+        if (contratoRepository.findByNumeroContrato(numeroContrato).isPresent()) {
+            throw new IllegalArgumentException(
+                    "Já existe um contrato cadastrado com esse número."
+            );
+        }
+
+        if (dto.dataInicio() != null && dto.dataFim() != null
+                && dto.dataFim().isBefore(dto.dataInicio())) {
+
+            throw new IllegalArgumentException(
+                    "A data de término não pode ser anterior à data de início."
+            );
+        }
+
+        Fornecedor fornecedor = fornecedorService.buscarPorId(
+                dto.fornecedorId()
+        );
+
+        Contrato contrato = new Contrato(
+                numeroContrato,
+                fornecedor,
+                dto.dataInicio(),
+                dto.dataFim()
+        );
+
+        Contrato salvo = contratoRepository.save(contrato);
+
+        return new ContratoResponseDTO(salvo);
     }
 
-    public List<Contrato> listarTodos() {
-        return contratoRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<ContratoResponseDTO> listarTodos() {
+
+        return contratoRepository
+                .findAll(Sort.by("numeroContrato"))
+                .stream()
+                .map(ContratoResponseDTO::new)
+                .toList();
     }
 }
