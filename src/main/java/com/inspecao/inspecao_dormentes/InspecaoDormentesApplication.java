@@ -1,6 +1,5 @@
 package com.inspecao.inspecao_dormentes;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,13 +9,12 @@ import java.util.TimeZone;
 public class InspecaoDormentesApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(InspecaoDormentesApplication.class, args);
-    }
+        TimeZone.setDefault(
+                TimeZone.getTimeZone("America/Sao_Paulo")
+        );
 
-    @PostConstruct
-    public void init() {
-        // Força a aplicação a usar o fuso horário de Brasília
-        TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
+        SpringApplication.run(
+                InspecaoDormentesApplication.class, args
+        );
     }
-
 }
