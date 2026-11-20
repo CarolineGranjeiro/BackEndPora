@@ -47,40 +47,53 @@ public class Contrato {
         this.dataFim = dataFim;
     }
 
+
     public Integer getId() {
+
         return id;
     }
     public void setId(Integer id) {
+
         this.id = id;
     }
     public String getNumeroContrato() {
+
         return numeroContrato;
     }
     public void setNumeroContrato(String numeroContrato) {
+
         this.numeroContrato = numeroContrato;
     }
     public Fornecedor getFornecedor() {
+
         return fornecedor;
     }
     public void setFornecedor(Fornecedor fornecedor) {
+
         this.fornecedor = fornecedor;
     }
     public LocalDate getDataInicio() {
+
         return dataInicio;
     }
     public void setDataInicio(LocalDate dataInicio) {
+
         this.dataInicio = dataInicio;
     }
     public LocalDate getDataFim() {
+
         return dataFim;
     }
     public void setDataFim(LocalDate dataFim) {
+
         this.dataFim = dataFim;
     }
     public LocalDateTime getCriadoEm() {
+
         return criadoEm;
     }
     public void setCriadoEm(LocalDateTime criadoEm) {
+
         this.criadoEm = criadoEm;
     }
 

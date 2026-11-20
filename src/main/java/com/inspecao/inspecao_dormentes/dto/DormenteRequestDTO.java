@@ -2,58 +2,67 @@ package com.inspecao.inspecao_dormentes.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public class DormenteRequestDTO {
+public record DormenteRequestDTO(
+        @NotBlank(message = "O número de série é obrigatório.")
+        @Size(max = 50, message = "O número de série deve ter no máximo 50 caracteres.")
+        String numeroSerie,
 
-    @NotBlank(message = "O número de série é obrigatório.")
-    @Size(max = 50, message = "O número de série deve ter no máximo 50 caracteres.")
-    private String numeroSerie;
+        @Size(max = 100, message = "O QR Code deve ter no máximo 100 caracteres.")
+        String qrCode,
 
-    @Size(max = 100, message = "O QR Code deve ter no máximo 100 caracteres.")
-    private String qrCode;
+        @NotBlank(message = "O tipo de cadastro é obrigatório.")
+        @Pattern(
+                regexp = "LOTE|INDIVIDUAL",
+                message = "O tipo de cadastro deve ser LOTE ou INDIVIDUAL."
+        )
+        String tipoCadastro,
 
-    @NotNull(message = "O ID do lote é obrigatório.")
-    private Integer loteId;
+        @NotNull(message = "O lote é obrigatório.")
+        @Positive(message = "O ID do lote deve ser positivo.")
+        Integer loteId,
 
-    @NotNull(message = "O ID do contrato é obrigatório.")
-    private Integer contratoId;
+        @NotNull(message = "O contrato é obrigatório.")
+        @Positive(message = "O ID do contrato deve ser positivo.")
+        Integer contratoId,
 
-    @Size(max = 50, message = "O tipo de madeira deve ter no máximo 50 caracteres.")
-    private String tipoMadeira;
+        @NotNull(message = "A localização é obrigatória.")
+        @Positive(message = "O ID da localização deve ser positivo.")
+        Integer localizacaoId,
 
-    @Size(max = 50, message = "A classe da madeira deve ter no máximo 50 caracteres.")
-    private String classeMadeira;
+        @NotBlank(message = "O material é obrigatório.")
+        @Size(max = 50, message = "O material deve ter no máximo 50 caracteres.")
+        String material,
 
-    private Double comprimento;
+        @NotBlank(message = "A descrição é obrigatória.")
+        @Size(max = 255, message = "A descrição deve ter no máximo 255 caracteres.")
+        String descricao,
 
-    @Size(max = 30, message = "O status deve ter no máximo 30 caracteres.")
-    private String status;
+        @Size(max = 50, message = "O tipo de madeira deve ter no máximo 50 caracteres.")
+        String tipoMadeira,
 
-    public DormenteRequestDTO() {
-    }
+        @Size(max = 50, message = "A classe da madeira deve ter no máximo 50 caracteres.")
+        String classeMadeira,
 
-    public String getNumeroSerie() { return numeroSerie; }
-    public void setNumeroSerie(String numeroSerie) { this.numeroSerie = numeroSerie; }
+        @Size(max = 100, message = "A espécie deve ter no máximo 100 caracteres.")
+        String especie,
 
-    public String getQrCode() { return qrCode; }
-    public void setQrCode(String qrCode) { this.qrCode = qrCode; }
+        @NotNull(message = "O comprimento é obrigatório.")
+        @Positive(message = "O comprimento deve ser maior que zero.")
+        Double comprimento,
 
-    public Integer getLoteId() { return loteId; }
-    public void setLoteId(Integer loteId) { this.loteId = loteId; }
+        @NotNull(message = "A largura é obrigatória.")
+        @Positive(message = "A largura deve ser maior que zero.")
+        Double largura,
 
-    public Integer getContratoId() { return contratoId; }
-    public void setContratoId(Integer contratoId) { this.contratoId = contratoId; }
+        @NotNull(message = "A altura é obrigatória.")
+        @Positive(message = "A altura deve ser maior que zero.")
+        Double altura,
 
-    public String getTipoMadeira() { return tipoMadeira; }
-    public void setTipoMadeira(String tipoMadeira) { this.tipoMadeira = tipoMadeira; }
-
-    public String getClasseMadeira() { return classeMadeira; }
-    public void setClasseMadeira(String classeMadeira) { this.classeMadeira = classeMadeira; }
-
-    public Double getComprimento() { return comprimento; }
-    public void setComprimento(Double comprimento) { this.comprimento = comprimento; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+        @Size(max = 30, message = "O status deve ter no máximo 30 caracteres.")
+        String status
+) {
 }
