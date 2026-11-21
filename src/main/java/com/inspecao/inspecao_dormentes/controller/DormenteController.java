@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/dormentes")
-@CrossOrigin(origins = "*")
 public class DormenteController {
 
     private final DormenteService dormenteService;
