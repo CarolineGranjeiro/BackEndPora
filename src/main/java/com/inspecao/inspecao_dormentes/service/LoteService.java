@@ -3,8 +3,10 @@ package com.inspecao.inspecao_dormentes.service;
 
 import com.inspecao.inspecao_dormentes.dto.LoteRequestDTO;
 import com.inspecao.inspecao_dormentes.dto.LoteResponseDTO;
+import com.inspecao.inspecao_dormentes.model.Contrato;
 import com.inspecao.inspecao_dormentes.model.Fornecedor;
 import com.inspecao.inspecao_dormentes.model.Lote;
+import com.inspecao.inspecao_dormentes.repository.ContratoRepository;
 import com.inspecao.inspecao_dormentes.repository.LoteRepository;
 
 import org.springframework.data.domain.Sort;
@@ -18,13 +20,16 @@ public class LoteService {
 
     private final LoteRepository loteRepository;
     private final FornecedorService fornecedorService;
+    private final ContratoRepository contratoRepository;
 
     public LoteService(
             LoteRepository loteRepository,
-            FornecedorService fornecedorService) {
-
+            FornecedorService fornecedorService,
+            ContratoRepository contratoRepository
+    ) {
         this.loteRepository = loteRepository;
         this.fornecedorService = fornecedorService;
+        this.contratoRepository = contratoRepository;
     }
 
     @Transactional
@@ -42,11 +47,24 @@ public class LoteService {
                 dto.fornecedorId()
         );
 
+        Contrato contrato = contratoRepository.findById(dto.contratoId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Contrato não encontrado."
+                ));
+
+        if (!contrato.getFornecedor().getId().equals(fornecedor.getId())) {
+            throw new IllegalArgumentException(
+                    "O contrato informado não pertence ao fornecedor selecionado."
+            );
+        }
+
         Lote lote = new Lote(
                 codigoLote,
                 fornecedor,
                 dto.dataRecebimento()
         );
+
+        lote.setContrato(contrato);
 
         Lote salvo = loteRepository.save(lote);
 
