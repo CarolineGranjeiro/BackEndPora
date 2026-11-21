@@ -18,6 +18,10 @@ public record LoteRequestDTO(
         @Positive(message = "O ID do fornecedor deve ser maior que zero.")
         Integer fornecedorId,
 
+        @NotNull(message = "O ID do contrato é obrigatório.")
+        @Positive(message = "O ID do contrato deve ser maior que zero.")
+        Integer contratoId,
+
         LocalDate dataRecebimento
 
 ) {

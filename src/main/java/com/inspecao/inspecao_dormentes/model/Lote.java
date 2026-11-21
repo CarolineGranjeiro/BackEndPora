@@ -21,6 +21,11 @@ public class Lote {
     @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contrato_id", nullable = false)
+    private Contrato contrato;
+
     @Column(name = "data_recebimento")
     private LocalDate dataRecebimento;
 
@@ -62,6 +67,13 @@ public class Lote {
     }
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
+    }
+    public Contrato getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(Contrato contrato) {
+        this.contrato = contrato;
     }
     public LocalDate getDataRecebimento() {
         return dataRecebimento;
