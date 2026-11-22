@@ -1,8 +1,10 @@
+
 package com.inspecao.inspecao_dormentes.controller;
 
 import com.inspecao.inspecao_dormentes.dto.LoteRequestDTO;
-import com.inspecao.inspecao_dormentes.model.Lote;
+import com.inspecao.inspecao_dormentes.dto.LoteResponseDTO;
 import com.inspecao.inspecao_dormentes.service.LoteService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +23,21 @@ public class LoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Lote> criar(@RequestBody @Valid LoteRequestDTO dto) {
-        Lote novoLote = loteService.criar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoLote);
+    public ResponseEntity<LoteResponseDTO> criar(
+            @RequestBody @Valid LoteRequestDTO dto) {
+
+        LoteResponseDTO novoLote = loteService.criar(dto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(novoLote);
     }
 
     @GetMapping
-    public ResponseEntity<List<Lote>> listar() {
-        return ResponseEntity.ok(loteService.listarTodos());
+    public ResponseEntity<List<LoteResponseDTO>> listar() {
+
+        return ResponseEntity.ok(
+                loteService.listarTodos()
+        );
     }
 }

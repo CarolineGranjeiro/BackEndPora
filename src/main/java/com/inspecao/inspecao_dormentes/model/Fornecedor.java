@@ -21,10 +21,10 @@ public class Fornecedor {
     @Column(name = "contato",length = 100)
     private String contato;
 
-    @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fornecedor")
     private List<Contrato> contratos;
 
-    @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fornecedor")
     private List<Lote> lotes;
 
     public Fornecedor() {
@@ -37,39 +37,51 @@ public class Fornecedor {
     }
 
     public Integer getId() {
+
         return id;
     }
     public void setId(Integer id) {
+
         this.id = id;
     }
     public String getNome() {
+
         return nome;
     }
     public void setNome(String nome) {
+
         this.nome = nome;
     }
     public String getCnpj() {
+
         return cnpj;
     }
     public void setCnpj(String cnpj) {
+
         this.cnpj = cnpj;
     }
     public String getContato() {
+
         return contato;
     }
     public void setContato(String contato) {
+
         this.contato = contato;
     }
     public List<Contrato> getContratos() {
+
         return contratos;
     }
     public void setContratos(List<Contrato> contratos) {
+
         this.contratos = contratos;
     }
     public List<Lote> getLotes() {
+
         return lotes;
     }
     public void setLotes(List<Lote> lotes) {
+
         this.lotes = lotes;
     }
 }

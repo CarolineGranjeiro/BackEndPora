@@ -3,6 +3,7 @@ package com.inspecao.inspecao_dormentes.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,11 @@ public class Lote {
     @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contrato_id", nullable = false)
+    private Contrato contrato;
+
     @Column(name = "data_recebimento")
     private LocalDate dataRecebimento;
 
@@ -31,9 +37,10 @@ public class Lote {
 
     @PrePersist
     public void prePersist() {
-        this.criadoEm = LocalDateTime.now();
+        this.criadoEm = LocalDateTime.now(
+                ZoneId.of("America/Sao_Paulo")
+        );
     }
-
     public Lote() {
     }
 
@@ -61,6 +68,13 @@ public class Lote {
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
+    public Contrato getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(Contrato contrato) {
+        this.contrato = contrato;
+    }
     public LocalDate getDataRecebimento() {
         return dataRecebimento;
     }
@@ -73,7 +87,6 @@ public class Lote {
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
     }
-
     public List<Dormente> getDormentes() {
         return dormentes; }
     public void setDormentes(List<Dormente> dormentes) {

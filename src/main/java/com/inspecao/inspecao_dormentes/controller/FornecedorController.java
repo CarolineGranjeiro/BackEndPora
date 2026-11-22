@@ -1,9 +1,10 @@
+
 package com.inspecao.inspecao_dormentes.controller;
 
-
 import com.inspecao.inspecao_dormentes.dto.FornecedorRequestDTO;
-import com.inspecao.inspecao_dormentes.model.Fornecedor;
+import com.inspecao.inspecao_dormentes.dto.FornecedorResponseDTO;
 import com.inspecao.inspecao_dormentes.service.FornecedorService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,21 @@ public class FornecedorController {
     }
 
     @PostMapping
-    public ResponseEntity<Fornecedor> criar(@RequestBody @Valid FornecedorRequestDTO dto) {
-        Fornecedor novoFornecedor = fornecedorService.criar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoFornecedor);
+    public ResponseEntity<FornecedorResponseDTO> criar(
+            @RequestBody @Valid FornecedorRequestDTO dto) {
+
+        FornecedorResponseDTO novoFornecedor = fornecedorService.criar(dto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(novoFornecedor);
     }
 
     @GetMapping
-    public ResponseEntity<List<Fornecedor>> listar() {
-        return ResponseEntity.ok(fornecedorService.listarTodos());
+    public ResponseEntity<List<FornecedorResponseDTO>> listar() {
+
+        return ResponseEntity.ok(
+                fornecedorService.listarTodos()
+        );
     }
 }
