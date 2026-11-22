@@ -1,8 +1,10 @@
+
 package com.inspecao.inspecao_dormentes.service;
 
 import com.inspecao.inspecao_dormentes.dto.DetalheInspecaoResponseDTO;
 import com.inspecao.inspecao_dormentes.dto.InspecaoRequestDTO;
 import com.inspecao.inspecao_dormentes.dto.InspecaoResponseDTO;
+import com.inspecao.inspecao_dormentes.exception.ResourceNotFoundException;
 import com.inspecao.inspecao_dormentes.model.Dormente;
 import com.inspecao.inspecao_dormentes.model.Inspecao;
 import com.inspecao.inspecao_dormentes.model.Usuario;
@@ -40,9 +42,21 @@ public class InspecaoService {
             InspecaoRequestDTO dto,
             Integer usuarioId) {
 
-        if (usuarioId == null) {
+        if (dto == null) {
             throw new IllegalArgumentException(
-                    "O responsável pela inspeção é obrigatório."
+                    "Informe os dados da inspeção."
+            );
+        }
+
+        if (usuarioId == null || usuarioId <= 0) {
+            throw new IllegalArgumentException(
+                    "Informe um responsável válido pela inspeção."
+            );
+        }
+
+        if (dto.dormenteId() == null || dto.dormenteId() <= 0) {
+            throw new IllegalArgumentException(
+                    "Informe um ID de dormente válido."
             );
         }
 
@@ -54,16 +68,30 @@ public class InspecaoService {
             );
         }
 
+        if (dto.status() == null || dto.status().isBlank()) {
+            throw new IllegalArgumentException(
+                    "O status da inspeção é obrigatório."
+            );
+        }
+
+        if (dto.detalhes() == null) {
+            throw new IllegalArgumentException(
+                    "Informe a lista de defeitos, mesmo que vazia."
+            );
+        }
+
         Dormente dormente = dormenteRepository
                 .findById(dto.dormenteId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Dormente não encontrado com o ID: " + dto.dormenteId()
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Dormente não encontrado com o ID: "
+                                + dto.dormenteId()
                 ));
 
         Usuario usuario = usuarioRepository
                 .findById(usuarioId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Usuário responsável não encontrado."
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Usuário responsável não encontrado com o ID: "
+                                + usuarioId
                 ));
 
         Inspecao inspecao = new Inspecao(
@@ -88,6 +116,7 @@ public class InspecaoService {
 
     @Transactional(readOnly = true)
     public List<InspecaoResponseDTO> listarTodos() {
+
         Sort ordenacao = Sort.by(
                 Sort.Order.desc("dataInspecao"),
                 Sort.Order.desc("id")
@@ -97,13 +126,16 @@ public class InspecaoService {
                 .stream()
                 .map(inspecao -> montarResposta(
                         inspecao,
-                        detalheInspecaoService.listarPorInspecao(inspecao.getId())
+                        detalheInspecaoService.listarPorInspecao(
+                                inspecao.getId()
+                        )
                 ))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public InspecaoResponseDTO buscarPorId(Integer id) {
+
         if (id == null || id <= 0) {
             throw new IllegalArgumentException(
                     "Informe um ID de inspeção válido."
@@ -111,7 +143,7 @@ public class InspecaoService {
         }
 
         Inspecao inspecao = inspecaoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Inspeção não encontrada com o ID: " + id
                 ));
 

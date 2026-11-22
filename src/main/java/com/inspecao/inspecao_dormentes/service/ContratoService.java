@@ -3,10 +3,10 @@ package com.inspecao.inspecao_dormentes.service;
 
 import com.inspecao.inspecao_dormentes.dto.ContratoRequestDTO;
 import com.inspecao.inspecao_dormentes.dto.ContratoResponseDTO;
+import com.inspecao.inspecao_dormentes.exception.DuplicateResourceException;
 import com.inspecao.inspecao_dormentes.model.Contrato;
 import com.inspecao.inspecao_dormentes.model.Fornecedor;
 import com.inspecao.inspecao_dormentes.repository.ContratoRepository;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,15 +30,38 @@ public class ContratoService {
     @Transactional
     public ContratoResponseDTO criar(ContratoRequestDTO dto) {
 
+        if (dto == null) {
+            throw new IllegalArgumentException(
+                    "Informe os dados do contrato."
+            );
+        }
+
+        if (dto.numeroContrato() == null
+                || dto.numeroContrato().isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "O número do contrato é obrigatório."
+            );
+        }
+
+        if (dto.fornecedorId() == null || dto.fornecedorId() <= 0) {
+            throw new IllegalArgumentException(
+                    "Informe um ID de fornecedor válido."
+            );
+        }
+
         String numeroContrato = dto.numeroContrato().trim();
 
-        if (contratoRepository.findByNumeroContrato(numeroContrato).isPresent()) {
-            throw new IllegalArgumentException(
+        if (contratoRepository.findByNumeroContrato(numeroContrato)
+                .isPresent()) {
+
+            throw new DuplicateResourceException(
                     "Já existe um contrato cadastrado com esse número."
             );
         }
 
-        if (dto.dataInicio() != null && dto.dataFim() != null
+        if (dto.dataInicio() != null
+                && dto.dataFim() != null
                 && dto.dataFim().isBefore(dto.dataInicio())) {
 
             throw new IllegalArgumentException(
