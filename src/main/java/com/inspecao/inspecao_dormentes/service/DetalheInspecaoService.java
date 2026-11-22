@@ -1,7 +1,10 @@
+
 package com.inspecao.inspecao_dormentes.service;
 
 import com.inspecao.inspecao_dormentes.dto.DetalheInspecaoRequestDTO;
 import com.inspecao.inspecao_dormentes.dto.DetalheInspecaoResponseDTO;
+import com.inspecao.inspecao_dormentes.exception.DuplicateResourceException;
+import com.inspecao.inspecao_dormentes.exception.ResourceNotFoundException;
 import com.inspecao.inspecao_dormentes.model.CatalogoDefeito;
 import com.inspecao.inspecao_dormentes.model.DetalheInspecao;
 import com.inspecao.inspecao_dormentes.model.Inspecao;
@@ -39,6 +42,12 @@ public class DetalheInspecaoService {
             Inspecao inspecao,
             List<DetalheInspecaoRequestDTO> itens) {
 
+        if (inspecao == null || inspecao.getId() == null) {
+            throw new IllegalArgumentException(
+                    "Informe uma inspeção válida."
+            );
+        }
+
         if (itens == null) {
             throw new IllegalArgumentException(
                     "Informe a lista de defeitos, mesmo que vazia."
@@ -66,14 +75,15 @@ public class DetalheInspecaoService {
 
             CatalogoDefeito defeito = defeitoRepository
                     .findById(item.defeitoId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Defeito não encontrado com o ID: " + item.defeitoId()
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Defeito não encontrado com o ID: "
+                                    + item.defeitoId()
                     ));
 
             if (detalheRepository.existsByInspecao_IdAndDefeito_Id(
                     inspecao.getId(), defeito.getId())) {
 
-                throw new IllegalArgumentException(
+                throw new DuplicateResourceException(
                         "Este defeito já está associado à inspeção."
                 );
             }
@@ -123,7 +133,7 @@ public class DetalheInspecaoService {
         }
 
         if (!inspecaoRepository.existsById(inspecaoId)) {
-            throw new IllegalArgumentException(
+            throw new ResourceNotFoundException(
                     "Inspeção não encontrada com o ID: " + inspecaoId
             );
         }

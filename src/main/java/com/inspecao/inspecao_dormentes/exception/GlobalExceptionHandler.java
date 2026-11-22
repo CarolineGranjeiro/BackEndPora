@@ -42,4 +42,47 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resposta);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> tratarNaoEncontrado(
+            ResourceNotFoundException ex) {
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("timestamp", LocalDateTime.now());
+        resposta.put("status", HttpStatus.NOT_FOUND.value());
+        resposta.put("erro", "Recurso não encontrado");
+        resposta.put("mensagem", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resposta);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<Map<String, Object>> tratarDuplicidade(
+            DuplicateResourceException ex) {
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("timestamp", LocalDateTime.now());
+        resposta.put("status", HttpStatus.CONFLICT.value());
+        resposta.put("erro", "Conflito de dados");
+        resposta.put("mensagem", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(resposta);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> tratarErroInterno(Exception ex) {
+
+        Map<String, Object> resposta = new HashMap<>();
+
+        resposta.put("timestamp", LocalDateTime.now());
+        resposta.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        resposta.put("erro", "Erro interno do servidor");
+        resposta.put("mensagem", "Ocorreu um erro inesperado. Tente novamente mais tarde.");
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(resposta);
+    }
+
+
 }

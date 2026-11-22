@@ -1,3 +1,4 @@
+
 package com.inspecao.inspecao_dormentes.service;
 
 import com.google.zxing.BarcodeFormat;
@@ -14,9 +15,15 @@ import java.io.IOException;
 public class QrCodeService {
 
     public byte[] gerarImagem(String conteudo) {
+
+        if (conteudo == null || conteudo.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Informe um conteúdo válido para gerar o QR Code."
+            );
+        }
+
         try {
             BitMatrix matriz = new MultiFormatWriter().encode(
-
                     conteudo,
                     BarcodeFormat.QR_CODE,
                     300,
